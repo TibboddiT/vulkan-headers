@@ -6,9 +6,12 @@ pub fn build(b: *std.Build) void {
 
     const lib = b.addStaticLibrary(.{
         .name = "vulkan-headers",
-        .root_source_file = b.addWriteFiles().add("empty.c", ""),
         .target = target,
         .optimize = optimize,
+    });
+
+    lib.addCSourceFile(.{
+        .file = b.addWriteFiles().add("empty.c", ""),
     });
 
     inline for (.{ "vk_video", "vulkan" }) |subdir| {
