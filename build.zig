@@ -4,14 +4,19 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const lib = b.addStaticLibrary(.{
-        .name = "vulkan-headers",
+    const libModule = b.createModule(.{
         .target = target,
         .optimize = optimize,
     });
 
-    lib.addCSourceFile(.{
+    libModule.addCSourceFile(.{
         .file = b.addWriteFiles().add("empty.c", ""),
+    });
+
+    const lib = b.addLibrary(.{
+        .linkage = .static,
+        .name = "vulkan-headers",
+        .root_module = libModule,
     });
 
     inline for (.{ "vk_video", "vulkan" }) |subdir| {
